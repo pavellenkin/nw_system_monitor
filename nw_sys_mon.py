@@ -37,6 +37,7 @@ def journal():
         jrl.journal_window.destroy()
         error("В схеме базы данных нет таблиц")
 
+
 class Main_page:
 
     def __init__(self):
@@ -138,13 +139,18 @@ class Main_page:
             memory = psutil.virtual_memory()
             time.sleep(update_second)
             self.ram_label.config(
-                text=f"ОЗУ: {memory.available // 1000000000} GB  /  "
-                     f"{memory.total // 1000000000} GB"
+                text=f"ОЗУ: "
+                     f"{memory.available // 1000000000}"
+                     f" GB  /  "
+                     f"{memory.total // 1000000000}"
+                     f" GB"
             )
             if write_en is True:
-                write = DB_config().write(cpu=self.proc_label['text'],
-                                 ram=self.ram_label['text'],
-                                 rom=self.rom_label['text'])
+                write = DB_config().write(
+                    cpu=self.proc_label['text'],
+                    ram=self.ram_label['text'],
+                    rom=self.rom_label['text']
+                )
                 if write is False:
                     error("Ошибка записи в БД")
                     self.stop_write()
@@ -267,8 +273,6 @@ class Journal:
 
     def clear_journal(self):
         self.journal_text.place_forget()
-
-
         if self.db.delete() is True:
             self.journal_text.delete(END, "")
         else:
