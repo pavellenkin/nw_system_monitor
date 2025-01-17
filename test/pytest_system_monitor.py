@@ -1,5 +1,5 @@
 import pytest
-from nw_sys_mon import  write_en, stop, check, is_valid
+from nw_sys_mon import write_en, stop, check, is_valid
 import nw_sys_mon
 
 
