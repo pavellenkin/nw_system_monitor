@@ -6,20 +6,25 @@ import psutil
 from db_config import DB_config
 import re
 
+
 write_en, stop, check = False, False, 0
+
 
 def is_valid(newval):
     return re.match(r"^\d{0,3}$", newval) is not None
 
+
 def error(text_send):
     message = text_send
     messagebox.showerror("Ошибка", message=message)
+
 
 def second_thread(thread, func):
     if not thread.is_alive():
         a_thread = None
         a_thread = threading.Thread(target=func)
         a_thread.start()
+
 
 def journal():
     jrl = Journal()
