@@ -221,6 +221,7 @@ class Main_page:
     def start_timer_threads(self):
         second_thread(self.timer_thread, self.timer)
 
+
 class Journal:
 
     def __init__(self):
@@ -279,5 +280,5 @@ class Journal:
             self.journal_window.destroy()
             error("В схеме базы данных нет таблиц")
 
-Main_page()
 
+Main_page()
