@@ -63,7 +63,7 @@ class Main_page:
         self.write_button = ttk.Button(
             self.root,
             text='Начать запись',
-            command=self.write_to_db
+            command=self.button_write_to_db
         )
         self.journal_button = ttk.Button(
             self.root,
@@ -173,7 +173,7 @@ class Main_page:
         if messagebox.askokcancel("Выход из программы", message=message):
             self.root.destroy()
 
-    def write_to_db(self):
+    def button_write_to_db(self):
         global check
         if check == 0:
             self.db.close_connect()
@@ -281,4 +281,5 @@ class Journal:
             error("В схеме базы данных нет таблиц")
 
 
-Main_page()
+if __name__ == '__main__':
+    Main_page()
