@@ -7,11 +7,11 @@ from db_config import DB_config
 import re
 
 
-write_en, stop, check = False, False, 0
+update_en, write_en, stop, check = False, False, False, 0
 
 
-def is_valid(newval):
-    return re.match(r"^\d{0,3}$", newval) is not None
+def is_valid(val):
+    return re.match(r"^\d{0,3}$", val) is not None
 
 
 def error(text_send):
@@ -38,7 +38,7 @@ def journal():
         error("В схеме базы данных нет таблиц")
 
 
-class Main_page:
+class MainPage:
 
     def __init__(self):
         self.update_cpu_thread = threading.Thread(target=self.processor)
@@ -86,6 +86,11 @@ class Main_page:
             text="сек.",
             font=("Courier New", 11)
         )
+        self.button_stop_update = ttk.Button(
+            self.root,
+            text="Сбросить",
+            command=self.update_stop
+        )
         self.timer_label = ttk.Label(
             font=("Courier New", 11),
             compound="left"
@@ -111,16 +116,18 @@ class Main_page:
             self.journal_button.configure(state="disabled")
             self.loading_label['text'] = 'Собираем информацию . . .'
         else:
-            self.update_label.place(x=650, y=23)
-            self.update_entry.place(x=760, y=23)
-            self.update_lab_sec.place(x=800, y=23)
+            self.button_stop_update.place(x=795, y=15)
+            self.update_label.place(x=600, y=23)
+            self.update_entry.place(x=710, y=20)
+            self.update_lab_sec.place(x=750, y=23)
             self.title_label.place(x=170, y=50)
             self.write_button.place(x=450, y=600)
             self.journal_button.configure(state="active")
             self.loading_label.place_forget()
 
     def processor(self):
-        while True:
+        global update_en
+        while update_en is False:
             try:
                 update_second = int(self.update_entry.get())
             except ValueError:
@@ -131,7 +138,8 @@ class Main_page:
 
     def memory_all(self):
         global write_en
-        while True:
+        global update_en
+        while update_en is False:
             try:
                 update_second = int(self.update_entry.get())
             except ValueError:
@@ -156,7 +164,8 @@ class Main_page:
                     self.stop_write()
 
     def hdd_all(self):
-        while True:
+        global update_en
+        while update_en is False:
             try:
                 update_second = int(self.update_entry.get())
             except ValueError:
@@ -212,7 +221,6 @@ class Main_page:
             self.timer_label.config(text=min_sec_format)
 
     def start_threads(self):
-        print('yes')
         second_thread(self.page_loading_thread, self.page_loading)
         second_thread(self.update_cpu_thread, self.processor)
         second_thread(self.update_memory_thread, self.memory_all)
@@ -220,6 +228,14 @@ class Main_page:
 
     def start_timer_threads(self):
         second_thread(self.timer_thread, self.timer)
+
+    def update_stop(self):
+        global update_en
+        update_en = True
+        time.sleep(1)
+        self.update_entry.delete(0, END)
+        self.update_entry.insert(0, "1")
+        update_en = False
 
 
 class Journal:
@@ -282,4 +298,4 @@ class Journal:
 
 
 if __name__ == '__main__':
-    Main_page()
+    MainPage()
